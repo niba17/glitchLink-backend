@@ -1,0 +1,56 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  // Jika kamu menghapus baris 'output', Prisma akan mengenerate client di node_modules/.prisma/client
+  // Jika kamu ingin menempatkannya di src/prisma/generated, biarkan baris ini:
+  // output = "../src/prisma/generated"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  links Link[]
+}
+
+model Link {
+  id          Int       @id @default(autoincrement()) // Ini harus Int (number)
+  original    String
+  shortCode   String    @unique
+  customAlias String?   @unique
+  userId      Int?      // Ini harus Int? jika userId bisa nullable/undefined. Jika tidak, hapus tanda tanya.
+  user        User?     @relation(fields: [userId], references: [id])
+  clicks      Click[]
+  clicksCount Int       @default(0) // <--- TAMBAHKAN BARIS INI
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  expiresAt   DateTime? // Ini harus DateTime? jika Anda menggunakannya
+}
+
+model Click {
+  id         Int      @id @default(autoincrement())
+  linkId     Int
+  link       Link     @relation(fields: [linkId], references: [id])
+  ipAddress  String
+  userAgent  String?
+  device     String?
+  browser    String?
+  os         String?
+  country    String?
+  city       String?
+  referrer   String?   // 👈 tambahkan kolom ini
+  clickedAt  DateTime @default(now())
+}
