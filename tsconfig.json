@@ -1,4 +1,3 @@
-// tsconfig.json
 {
   "compilerOptions": {
     "target": "es2020",
@@ -9,11 +8,7 @@
     "forceConsistentCasingInFileNames": true,
     "strict": true,
     "skipLibCheck": true,
-    "baseUrl": ".", // Ini penting! Menentukan direktori dasar untuk resolusi modul
-    "paths": {
-      // Pastikan Prisma Client yang di-generate bisa diakses
-      "@prisma/client": ["./src/prisma/generated"] // Ubah ini
-    }
+    "baseUrl": "."
   },
   "include": ["src/**/*.ts"],
   "exclude": ["node_modules", "dist"]
